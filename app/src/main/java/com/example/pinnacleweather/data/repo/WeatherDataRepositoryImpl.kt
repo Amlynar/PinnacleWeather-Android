@@ -33,6 +33,13 @@ class WeatherDataRepositoryImpl @Inject constructor(
             }
     }
 
+    override suspend fun fetchMostRecentWeatherDataIfExists() {
+        localWeatherDataDao.getFirst().let {
+            // TODO fetchMostRecentWeatherDataIfExists
+        }
+    }
+
+
     override suspend fun addRandom() {
         localWeatherDataDao.deleteAll()
         localWeatherDataDao.upsert(
@@ -76,6 +83,8 @@ class WeatherDataRepositoryImpl @Inject constructor(
                 Log.e("test",it.errorBody().toString())
             }
         }
+
+        Log.d("test","finished")
     }
 
     private fun toWeatherData(localWeatherData: LocalWeatherData): WeatherData = WeatherData(

@@ -43,6 +43,13 @@ class WeatherViewModel @Inject constructor(
                 initialValue = WeatherUiState()
             )
 
+    fun autoLoadLastCity() {
+        viewModelScope.launch {
+            weatherDataRepository.fetchMostRecentWeatherDataIfExists()
+        }
+    }
+
+
     fun addRandom() {
         viewModelScope.launch {
             weatherDataRepository.addRandom()

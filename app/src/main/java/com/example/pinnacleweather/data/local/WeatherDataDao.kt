@@ -22,4 +22,7 @@ interface WeatherDataDao {
 
     @Query("SELECT * FROM weatherData")
     suspend fun getAll(): List<LocalWeatherData>
+
+    @Query("SELECT * FROM weatherData LIMIT 1")
+    suspend fun getFirst(): LocalWeatherData
 }

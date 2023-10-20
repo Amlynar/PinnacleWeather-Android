@@ -6,5 +6,7 @@ interface WeatherDataRepository {
 
     fun getWeatherDataStream(): Flow<WeatherData>
 
+    suspend fun fetchMostRecentWeatherDataIfExists()
+
     suspend fun addRandom()
 }
