@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import com.example.pinnacleweather.ui.theme.PinnacleWeatherTheme
 import com.example.pinnacleweather.weather.WeatherScreen
 import com.example.pinnacleweather.weather.WeatherViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: WeatherViewModel by viewModels()
