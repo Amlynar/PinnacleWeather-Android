@@ -11,6 +11,9 @@ interface WeatherDataDao {
     @Query("SELECT * FROM weatherData")
     fun observeAll(): Flow<List<LocalWeatherData>>
 
+    @Query("SELECT * FROM weatherData LIMIT 1")
+    fun observeOne(): Flow<LocalWeatherData>
+
     @Upsert
     suspend fun upsert(weatherData: LocalWeatherData)
 
