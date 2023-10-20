@@ -9,6 +9,4 @@ interface WeatherDataRepository {
     suspend fun searchCity(cityName: String)
 
     suspend fun fetchMostRecentWeatherDataIfExists()
-
-    suspend fun addRandom()
 }

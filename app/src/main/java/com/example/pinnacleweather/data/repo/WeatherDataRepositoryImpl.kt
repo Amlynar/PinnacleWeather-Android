@@ -79,53 +79,6 @@ class WeatherDataRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addRandom() {
-//        localWeatherDataDao.deleteAll()
-//        localWeatherDataDao.upsert(
-//            LocalWeatherData(
-//                UUID.randomUUID().toString(),
-//                "city")
-//        )
-//        for (localWeatherData in localWeatherDataDao.getAll()) {
-//            Log.d("test",localWeatherData.toString())
-//        }
-
-
-//        weatherNetworkService.getWeather(lat = 44.34, lon = 19.99).let {
-//            if (it.isSuccessful) {
-//                val response = it.body()
-//                Log.d("Test",response?.weather?.firstOrNull().toString())
-//            }
-//            else {
-//                Log.e("test",it.errorBody().toString())
-//            }
-//        }
-
-//        weatherNetworkService.getGeoLocation("New York").let {
-//            if (it.isSuccessful) {
-//                val response = it.body()
-//                val geolocation = response?.firstOrNull()
-//                Log.d("test", response?.firstOrNull().toString())
-//                geolocation?.let { it1 ->
-//                    weatherNetworkService.getWeather(lat = it1.lat, lon = it1.lon).let { it2 ->
-//                        if (it2.isSuccessful) {
-//                            val response2 = it2.body()
-//                            Log.d("Test",response2?.weather?.firstOrNull().toString())
-//                        } else {
-//                            Log.e("test",it2.errorBody().toString())
-//                        }
-//                    }
-//                }
-//
-//            }
-//            else {
-//                Log.e("test",it.errorBody().toString())
-//            }
-//        }
-//
-//        Log.d("test","finished")
-    }
-
     private fun toWeatherData(localWeatherData: LocalWeatherData): WeatherData = WeatherData(
         id = localWeatherData.id,
         city = localWeatherData.city,

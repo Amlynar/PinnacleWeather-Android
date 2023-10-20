@@ -57,14 +57,6 @@ class WeatherViewModel @Inject constructor(
 
     }
 
-    fun addRandom() {
-        viewModelScope.launch {
-            weatherDataRepository.addRandom()
-        }
-
-    }
-
-
     private fun produceWeatherUiState(weatherDataLoad: Async<WeatherData>) =
         when (weatherDataLoad) {
             Async.Loading -> {
