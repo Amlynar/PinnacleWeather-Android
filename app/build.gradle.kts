@@ -87,6 +87,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
 
 }
 

@@ -1,7 +1,10 @@
 package com.example.pinnacleweather.data.repo
 
+import android.util.Log
 import com.example.pinnacleweather.data.local.LocalWeatherData
 import com.example.pinnacleweather.data.local.WeatherDataDao
+import com.example.pinnacleweather.data.network.OpenWeatherDataResponse
+import com.example.pinnacleweather.data.network.WeatherNetworkService
 import com.example.pinnacleweather.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class WeatherDataRepositoryImpl @Inject constructor(
     private val localWeatherDataDao: WeatherDataDao,
+    private val weatherNetworkService: WeatherNetworkService,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ) : WeatherDataRepository {
 
@@ -39,6 +43,18 @@ class WeatherDataRepositoryImpl @Inject constructor(
 //        for (localWeatherData in localWeatherDataDao.getAll()) {
 //            Log.d("test",localWeatherData.toString())
 //        }
+
+
+        weatherNetworkService.getWeather(lat = 44.34, lon = 19.99).let {
+            if (it.isSuccessful) {
+                val response = it.body()
+                Log.d("Test",response?.weather?.firstOrNull().toString())
+            }
+            else {
+                Log.e("test",it.errorBody().toString())
+            }
+        }
+
     }
 
     private fun toWeatherData(localWeatherData: LocalWeatherData): WeatherData = WeatherData(
