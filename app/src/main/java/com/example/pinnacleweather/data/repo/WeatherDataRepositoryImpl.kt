@@ -37,7 +37,9 @@ class WeatherDataRepositoryImpl @Inject constructor(
 
     override suspend fun fetchMostRecentWeatherDataIfExists() {
         localWeatherDataDao.getFirst().let {
-            // TODO fetchMostRecentWeatherDataIfExists
+            localWeatherDataDao.getFirst().let {
+                fetchWeatherByLatLonAndPersist(cityName = it.city, lon = it.lon, lat = it.lat)
+            }
         }
     }
 
@@ -58,24 +60,27 @@ class WeatherDataRepositoryImpl @Inject constructor(
                 return
             }
 
-            weatherNetworkService.getWeather(lat = geolocation.lat, lon = geolocation.lon).let { openWeatherDataResponse ->
-                if(!openWeatherDataResponse.isSuccessful) {
-                    Log.e(TAG,openWeatherGeocodingResponse.errorBody().toString())
-                    // TODO implement error handling
-                    return
-                }
-
-                val weatherNetworkData = openWeatherDataResponse.body()
-                if (weatherNetworkData == null) {
-                    Log.e(TAG, "weatherNetworkData == null")
-                    // TODO implement error handling
-                    return
-                }
-                val lastUpdated = System.currentTimeMillis()
-                localWeatherDataDao.deleteAll()
-                val localWeatherData = toLocalWeatherData(cityName,lastUpdated,weatherNetworkData)
-                localWeatherDataDao.upsert(localWeatherData)
+            fetchWeatherByLatLonAndPersist(cityName = cityName, lat = geolocation.lat, lon = geolocation.lon)
+        }
+    }
+    private suspend fun fetchWeatherByLatLonAndPersist(cityName: String, lat: Double, lon: Double) {
+        weatherNetworkService.getWeather(lat = lat, lon = lon).let { openWeatherDataResponse ->
+            if(!openWeatherDataResponse.isSuccessful) {
+                Log.e(TAG,openWeatherDataResponse.errorBody().toString())
+                // TODO implement error handling
+                return
             }
+
+            val weatherNetworkData = openWeatherDataResponse.body()
+            if (weatherNetworkData == null) {
+                Log.e(TAG, "weatherNetworkData == null")
+                // TODO implement error handling
+                return
+            }
+            val lastUpdated = System.currentTimeMillis()
+            localWeatherDataDao.deleteAll()
+            val localWeatherData = toLocalWeatherData(cityName,lastUpdated,weatherNetworkData)
+            localWeatherDataDao.upsert(localWeatherData)
         }
     }
 
