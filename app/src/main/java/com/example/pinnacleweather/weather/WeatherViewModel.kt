@@ -1,11 +1,14 @@
 package com.example.pinnacleweather.weather
 
+import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pinnacleweather.data.location.LocationPermissionStatus
+import com.example.pinnacleweather.data.location.LocationService
 import com.example.pinnacleweather.data.repo.WeatherData
 import com.example.pinnacleweather.data.repo.WeatherDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +40,8 @@ data class WeatherUiState (
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val weatherDataRepository: WeatherDataRepository
+    private val weatherDataRepository: WeatherDataRepository,
+    private val locationService: LocationService
 ) : ViewModel() {
 
     private val errorMessageFlow = MutableStateFlow("")
@@ -80,6 +84,25 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    fun autoLoadWeatherData() {
+        when (locationService.permissionStatus()) {
+            LocationPermissionStatus.GRANTED -> {
+                locationService.lastKnownLocation().addOnSuccessListener {location ->
+                    if (location != null) { // According to Docs location and be null in rare occasions
+                        fetchWeatherByLatLonAndPersist(lat = location.latitude, lon = location.longitude)
+                    }
+                    else {
+                        autoLoadLastCity()
+                    }
+                }
+            }
+            LocationPermissionStatus.DENIED -> {
+                autoLoadLastCity()
+            }
+            LocationPermissionStatus.UNKNOWN -> {}
+        }
+    }
+
     fun searchCity() {
         viewModelScope.launch {
             try {
@@ -91,6 +114,24 @@ class WeatherViewModel @Inject constructor(
                     searchEntry = ""
                     weatherDataRepository.searchCity(cityName)
                 }
+            }
+            // Catching the base Exception is bad practise
+            // in efforts to save time we can use this pattern
+            //  this should be refactored later
+            catch (e: Exception) {
+                displayErrorMessage()
+            }
+        }
+    }
+
+    private fun fetchWeatherByLatLonAndPersist(lat: Double, lon: Double) {
+        viewModelScope.launch {
+            try {
+                clearErrorMessage()
+                weatherDataRepository.fetchWeatherByLatLonAndPersist(
+                    cityName = "",
+                    lat = lat,
+                    lon = lon)
             }
             // Catching the base Exception is bad practise
             // in efforts to save time we can use this pattern

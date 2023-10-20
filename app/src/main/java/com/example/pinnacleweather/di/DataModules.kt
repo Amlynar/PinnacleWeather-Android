@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.pinnacleweather.data.local.WeatherDataDao
 import com.example.pinnacleweather.data.local.WeatherDataDatabase
+import com.example.pinnacleweather.data.location.LocationService
 import com.example.pinnacleweather.data.network.OpenWeatherMapAPI
 import com.example.pinnacleweather.data.network.WeatherNetworkService
 import com.example.pinnacleweather.data.repo.WeatherDataRepository
@@ -48,6 +49,17 @@ object DatabaseModule {
 
     @Provides
     fun provideWeatherDataDao(database: WeatherDataDatabase): WeatherDataDao = database.weatherDataDao()
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object LocationModule {
+
+    @Singleton
+    @Provides
+    fun provideLocationService(@ApplicationContext context: Context): LocationService {
+        return LocationService(context)
+    }
 }
 
 @Module

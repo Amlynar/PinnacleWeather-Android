@@ -59,7 +59,7 @@ class WeatherDataRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun fetchWeatherByLatLonAndPersist(cityName: String, lat: Double, lon: Double) {
+    override suspend fun fetchWeatherByLatLonAndPersist(cityName: String, lat: Double, lon: Double) {
         weatherNetworkService.getWeather(lat = lat, lon = lon).let { openWeatherDataResponse ->
             if(!openWeatherDataResponse.isSuccessful) {
                 Log.e(TAG,openWeatherDataResponse.errorBody().toString())

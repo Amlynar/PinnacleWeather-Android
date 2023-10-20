@@ -8,5 +8,7 @@ interface WeatherDataRepository {
 
     suspend fun searchCity(cityName: String)
 
+    suspend fun fetchWeatherByLatLonAndPersist(cityName: String, lat: Double, lon: Double)
+
     suspend fun fetchMostRecentWeatherDataIfExists()
 }

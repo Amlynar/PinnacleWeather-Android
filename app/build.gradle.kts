@@ -91,7 +91,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.6.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
-
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }
 
 // Allow references to generated code
