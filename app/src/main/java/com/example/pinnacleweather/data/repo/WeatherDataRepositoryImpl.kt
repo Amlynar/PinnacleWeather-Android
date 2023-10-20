@@ -95,11 +95,10 @@ class WeatherDataRepositoryImpl @Inject constructor(
         lat = openWeatherDataResponse.lat,
         lon = openWeatherDataResponse.lon,
         temperature = openWeatherDataResponse.main!!.temp,
-        weatherIcon = openWeatherDataResponse.weather!!.first().icon,
+        weatherIcon = weatherNetworkService.iconUrl(openWeatherDataResponse.weather!!.first().icon),
         weatherMain = openWeatherDataResponse.weather.first().main,
         weatherDescription = openWeatherDataResponse.weather.first().description,
         lastUpdated = lastUpdated
-
     )
 
 }

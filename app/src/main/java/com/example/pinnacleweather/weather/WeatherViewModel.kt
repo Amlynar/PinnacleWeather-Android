@@ -27,7 +27,10 @@ sealed class Async<out T> {
     data class Success<out T>(val data: T) : Async<T>()
 }
 
-data class WeatherUiState (val message: String = "Weather Message", val errorMessage: String = "")
+data class WeatherUiState (
+    val message: String = "Weather Message",
+    val errorMessage: String = "",
+    val iconUrl: String = "")
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
@@ -105,7 +108,8 @@ class WeatherViewModel @Inject constructor(
                 val date = Date(weatherDataLoad.data.lastUpdated)
                 WeatherUiState(
                     message = "${weatherDataLoad.data.city} ${weatherDataLoad.data.weatherMain} ${weatherDataLoad.data.temperature} ${dateFormat.format(date)}",
-                    errorMessage = errorMessage)
+                    errorMessage = errorMessage,
+                    iconUrl = weatherDataLoad.data.weatherIcon)
             }
         }
 }

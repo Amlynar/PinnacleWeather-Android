@@ -18,4 +18,8 @@ class WeatherNetworkService @Inject constructor(
     suspend fun getGeoLocation(cityName: String): Response<List<OpenWeatherGeocodingResponse>> {
         return openWeatherMapAPI.getGeoLocation(location = "$cityName,,US", apiKey = API_KEY)
     }
+
+    fun iconUrl(icon: String): String {
+        return "https://openweathermap.org/img/wn/$icon@2x.png"
+    }
 }

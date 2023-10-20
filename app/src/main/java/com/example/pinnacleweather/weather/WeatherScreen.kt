@@ -19,7 +19,7 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
         Button(onClick = viewModel::searchCity) {
             Text(text = "Search", modifier = modifier)
         }
-        GlideImage(model = "https://openweathermap.org/img/wn/10d@4x.png", contentDescription = "", modifier = modifier) // Experimental library
+        GlideImage(model = uiState.iconUrl, contentDescription = "", modifier = modifier) // Experimental library, but handles image downloading and caching
         Text(text = uiState.errorMessage, modifier = modifier)
     }
 }
