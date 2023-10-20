@@ -35,10 +35,8 @@ class WeatherDataRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchMostRecentWeatherDataIfExists() {
-        localWeatherDataDao.getFirst().let {
-            localWeatherDataDao.getFirst().let {
-                fetchWeatherByLatLonAndPersist(cityName = it.city, lon = it.lon, lat = it.lat)
-            }
+        localWeatherDataDao.getFirst()?.let {
+            fetchWeatherByLatLonAndPersist(cityName = it.city, lon = it.lon, lat = it.lat)
         }
     }
 
