@@ -11,5 +11,11 @@ class WeatherNetworkService @Inject constructor(
         return openWeatherMapAPI.getWeather(lat,lon,API_KEY)
     }
 
+//    suspend fun getLatLon(cityName: String): Response<List<OpenWeatherGeocodingResponse>> {
+//        return openWeatherMapAPI.getLatLon(cityName = cityName, countryCode = "US", apiKey = API_KEY)
+//    }
 
+    suspend fun getGeoLocation(cityName: String): Response<List<OpenWeatherGeocodingResponse>> {
+        return openWeatherMapAPI.getGeoLocation(location = "$cityName,,US", apiKey = API_KEY)
+    }
 }

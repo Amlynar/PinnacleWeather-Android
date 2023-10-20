@@ -54,7 +54,7 @@ object DatabaseModule {
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     private val DEBUG: Boolean = true
-    private val BASE_URL: String = "https://api.openweathermap.org/data/2.5/"
+    private val BASE_URL: String = "https://api.openweathermap.org/"
 
     @Singleton
     @Provides
