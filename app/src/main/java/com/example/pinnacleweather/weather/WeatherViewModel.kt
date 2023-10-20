@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -67,7 +70,9 @@ class WeatherViewModel @Inject constructor(
                 WeatherUiState(message = "error")
             }
             is Async.Success -> {
-                WeatherUiState(message = "${weatherDataLoad.data.city} ${weatherDataLoad.data.weatherMain} ${weatherDataLoad.data.temperature}")
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val date = Date(weatherDataLoad.data.lastUpdated)
+                WeatherUiState(message = "${weatherDataLoad.data.city} ${weatherDataLoad.data.weatherMain} ${weatherDataLoad.data.temperature} ${dateFormat.format(date)}")
             }
         }
 }

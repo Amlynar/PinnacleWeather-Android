@@ -71,9 +71,9 @@ class WeatherDataRepositoryImpl @Inject constructor(
                     // TODO implement error handling
                     return
                 }
-
+                val lastUpdated = System.currentTimeMillis()
                 localWeatherDataDao.deleteAll()
-                val localWeatherData = toLocalWeatherData(cityName,weatherNetworkData)
+                val localWeatherData = toLocalWeatherData(cityName,lastUpdated,weatherNetworkData)
                 localWeatherDataDao.upsert(localWeatherData)
             }
         }
@@ -85,9 +85,10 @@ class WeatherDataRepositoryImpl @Inject constructor(
         temperature = localWeatherData.temperature,
         weatherIcon = localWeatherData.weatherIcon,
         weatherMain = localWeatherData.weatherMain,
-        weatherDescription = localWeatherData.weatherDescription)
+        weatherDescription = localWeatherData.weatherDescription,
+        lastUpdated = localWeatherData.lastUpdated)
 
-    private fun toLocalWeatherData(cityName: String, openWeatherDataResponse: OpenWeatherDataResponse): LocalWeatherData = LocalWeatherData(
+    private fun toLocalWeatherData(cityName: String, lastUpdated: Long, openWeatherDataResponse: OpenWeatherDataResponse): LocalWeatherData = LocalWeatherData(
         id = UUID.randomUUID().toString(),
         city = cityName,
         lat = openWeatherDataResponse.lat,
@@ -95,7 +96,9 @@ class WeatherDataRepositoryImpl @Inject constructor(
         temperature = openWeatherDataResponse.main!!.temp,
         weatherIcon = openWeatherDataResponse.weather!!.first().icon,
         weatherMain = openWeatherDataResponse.weather.first().main,
-        weatherDescription = openWeatherDataResponse.weather.first().description
+        weatherDescription = openWeatherDataResponse.weather.first().description,
+        lastUpdated = lastUpdated
+
     )
 
 }

@@ -12,6 +12,6 @@ data class LocalWeatherData (
     var temperature: Double,
     var weatherIcon: String,
     var weatherMain: String,
-    var weatherDescription: String
-    // TODO Add lastUpdated Timestamp
+    var weatherDescription: String,
+    var lastUpdated: Long = 0L
 )
