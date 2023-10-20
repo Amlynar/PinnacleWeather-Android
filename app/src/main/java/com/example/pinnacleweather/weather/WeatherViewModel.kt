@@ -49,6 +49,13 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    fun searchCity() {
+        viewModelScope.launch {
+            val cityName = "New York"
+            weatherDataRepository.searchCity(cityName)
+        }
+
+    }
 
     fun addRandom() {
         viewModelScope.launch {

@@ -16,7 +16,7 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
     Column {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         Text(text = uiState.message, modifier = modifier)
-        Button(onClick = viewModel::addRandom) {
+        Button(onClick = viewModel::searchCity) {
             Text(text = "Add", modifier = modifier)
         }
         GlideImage(model = "https://openweathermap.org/img/wn/10d@4x.png", contentDescription = "", modifier = modifier) // Experimental library

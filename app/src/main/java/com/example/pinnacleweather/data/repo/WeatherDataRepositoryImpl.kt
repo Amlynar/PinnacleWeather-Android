@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.pinnacleweather.data.local.LocalWeatherData
 import com.example.pinnacleweather.data.local.WeatherDataDao
 import com.example.pinnacleweather.data.network.OpenWeatherDataResponse
+import com.example.pinnacleweather.data.network.Weather
 import com.example.pinnacleweather.data.network.WeatherNetworkService
 import com.example.pinnacleweather.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,6 +23,7 @@ class WeatherDataRepositoryImpl @Inject constructor(
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ) : WeatherDataRepository {
 
+    private val TAG: String = "WeatherDataRepository"
 
     override fun getWeatherDataStream(): Flow<WeatherData> {
         return localWeatherDataDao.observeOne()
@@ -39,6 +41,43 @@ class WeatherDataRepositoryImpl @Inject constructor(
         }
     }
 
+    // We should consider using a Flow or observable here
+    // to chain responses together and unify error handling
+    override suspend fun searchCity(cityName: String) {
+        weatherNetworkService.getGeoLocation(cityName).let {openWeatherGeocodingResponse ->
+            if (!openWeatherGeocodingResponse.isSuccessful) {
+                Log.e(TAG,openWeatherGeocodingResponse.errorBody().toString())
+                // TODO implement error handling
+                return
+            }
+
+            val geolocation = openWeatherGeocodingResponse.body()?.first()
+            if (geolocation == null) {
+                Log.e(TAG,"geolocation == null")
+                // TODO implement error handling
+                return
+            }
+
+            weatherNetworkService.getWeather(lat = geolocation.lat, lon = geolocation.lon).let { openWeatherDataResponse ->
+                if(!openWeatherDataResponse.isSuccessful) {
+                    Log.e(TAG,openWeatherGeocodingResponse.errorBody().toString())
+                    // TODO implement error handling
+                    return
+                }
+
+                val weatherNetworkData = openWeatherDataResponse.body()?.weather?.first()
+                if (weatherNetworkData == null) {
+                    Log.e(TAG, "weatherNetworkData == null")
+                    // TODO implement error handling
+                    return
+                }
+
+                localWeatherDataDao.deleteAll()
+                val localWeatherData = toLocalWeatherData(weatherNetworkData)
+                localWeatherDataDao.upsert(localWeatherData)
+            }
+        }
+    }
 
     override suspend fun addRandom() {
         localWeatherDataDao.deleteAll()
@@ -90,5 +129,10 @@ class WeatherDataRepositoryImpl @Inject constructor(
     private fun toWeatherData(localWeatherData: LocalWeatherData): WeatherData = WeatherData(
         id = localWeatherData.id,
         city = localWeatherData.city)
+
+    private fun toLocalWeatherData(weatherNetworkData: Weather): LocalWeatherData = LocalWeatherData(
+        id = "",
+        city = ""
+    )
 
 }
