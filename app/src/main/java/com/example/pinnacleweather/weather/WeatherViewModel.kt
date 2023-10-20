@@ -1,6 +1,9 @@
 package com.example.pinnacleweather.weather
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pinnacleweather.data.repo.WeatherData
@@ -55,6 +58,13 @@ class WeatherViewModel @Inject constructor(
             initialValue = WeatherUiState()
         )
 
+
+    var searchEntry by mutableStateOf("")
+
+    fun updateUsername(input: String) {
+        searchEntry = input
+    }
+
     fun autoLoadLastCity() {
         viewModelScope.launch {
             try {
@@ -74,8 +84,13 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 clearErrorMessage()
-                val cityName = "New York"
-                weatherDataRepository.searchCity(cityName)
+                if (searchEntry.isNotEmpty()) { // will want more validation
+                    // in a future feature showing a list or past searches or
+                    // showing recommendations based on input should be considered
+                    val cityName = searchEntry
+                    searchEntry = ""
+                    weatherDataRepository.searchCity(cityName)
+                }
             }
             // Catching the base Exception is bad practise
             // in efforts to save time we can use this pattern
