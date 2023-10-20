@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             PinnacleWeatherTheme {
                 // A surface container using the 'background' color from the theme
@@ -45,6 +44,7 @@ class MainActivity : ComponentActivity() {
         viewModel.autoLoadWeatherData()
     }
 
+    // Request the user for their location
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+    // Request the user for their location
     private fun requestPermission() {
         when {
             ContextCompat.checkSelfPermission(
@@ -73,6 +74,8 @@ class MainActivity : ComponentActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
+                // Here can display a message to the user notifying them the
+                //  app can get their current locations weather with the right permissions
                 locationService.permissionDenied()
                 viewModel.autoLoadWeatherData()
             }

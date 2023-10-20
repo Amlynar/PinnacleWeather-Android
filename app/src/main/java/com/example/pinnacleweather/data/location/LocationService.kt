@@ -9,6 +9,7 @@ enum class LocationPermissionStatus {
     GRANTED, DENIED, UNKNOWN
 }
 
+// A wrapper class around the Google LocationServices class
 class LocationService @Inject constructor(
     @ApplicationContext private val applicationContext: Context
 ){
@@ -27,6 +28,7 @@ class LocationService @Inject constructor(
 
     fun permissionStatus() = locationPermissionStatus
 
+    // Location permissions are requested an handled before this function is ever called
     fun lastKnownLocation() = fusedLocationClient.lastLocation
 
 }

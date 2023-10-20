@@ -24,6 +24,7 @@ class WeatherDataRepositoryImpl @Inject constructor(
 
     private val TAG: String = "WeatherDataRepository"
 
+    // Create an observable data flow from Room
     override fun getWeatherDataStream(): Flow<WeatherData> {
         return localWeatherDataDao.observeOne()
             .filterNotNull()
@@ -34,6 +35,7 @@ class WeatherDataRepositoryImpl @Inject constructor(
             }
     }
 
+    // There should only be one row in the database at a time with the current implementation
     override suspend fun fetchMostRecentWeatherDataIfExists() {
         localWeatherDataDao.getFirst()?.let {
             fetchWeatherByLatLonAndPersist(cityName = it.city, lon = it.lon, lat = it.lat)
@@ -59,6 +61,8 @@ class WeatherDataRepositoryImpl @Inject constructor(
         }
     }
 
+    // We should consider using a Flow or observable here
+    // to chain responses together and unify error handling
     override suspend fun fetchWeatherByLatLonAndPersist(cityName: String, lat: Double, lon: Double) {
         weatherNetworkService.getWeather(lat = lat, lon = lon).let { openWeatherDataResponse ->
             if(!openWeatherDataResponse.isSuccessful) {
@@ -78,6 +82,7 @@ class WeatherDataRepositoryImpl @Inject constructor(
         }
     }
 
+    // These mapping functions can be done using extensions or a utility file
     private fun toWeatherData(localWeatherData: LocalWeatherData): WeatherData = WeatherData(
         id = localWeatherData.id,
         city = localWeatherData.city,
@@ -87,13 +92,14 @@ class WeatherDataRepositoryImpl @Inject constructor(
         weatherDescription = localWeatherData.weatherDescription,
         lastUpdated = localWeatherData.lastUpdated)
 
+    // These mapping functions can be done using extensions or a utility file
     private fun toLocalWeatherData(cityName: String, lastUpdated: Long, openWeatherDataResponse: OpenWeatherDataResponse): LocalWeatherData = LocalWeatherData(
         id = UUID.randomUUID().toString(),
         city = cityName,
         lat = openWeatherDataResponse.lat,
         lon = openWeatherDataResponse.lon,
         temperature = openWeatherDataResponse.main!!.temp,
-        weatherIcon = weatherNetworkService.iconUrl(openWeatherDataResponse.weather!!.first().icon),
+        weatherIcon = weatherNetworkService.iconUrl(openWeatherDataResponse.weather!!.first().icon), // this is a bit of a hack and could be done in another function
         weatherMain = openWeatherDataResponse.weather.first().main,
         weatherDescription = openWeatherDataResponse.weather.first().description,
         lastUpdated = lastUpdated

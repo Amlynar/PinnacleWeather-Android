@@ -43,7 +43,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             WeatherDataDatabase::class.java,
-            "WeatherData.db"
+            "WeatherData.db" // We can create a const file for Room config parameters
         ).build()
     }
 
@@ -65,8 +65,7 @@ object LocationModule {
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private val DEBUG: Boolean = true
-    private val BASE_URL: String = "https://api.openweathermap.org/"
+    private val BASE_URL: String = "https://api.openweathermap.org/" // Similar to other retrofit areas these hardcoded strings should be in one const file
 
     @Singleton
     @Provides

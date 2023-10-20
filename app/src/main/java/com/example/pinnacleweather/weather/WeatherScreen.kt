@@ -15,6 +15,9 @@ import com.bumptech.glide.integration.compose.GlideImage
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
+    // This compose UI is not very pleasant and can be updated int he future with
+    //  a better design
+    // Also a navigation with multiple screens would be nice to save locations
     Column {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         OutlinedTextField(value = viewModel.searchEntry, onValueChange = viewModel::updateUsername)

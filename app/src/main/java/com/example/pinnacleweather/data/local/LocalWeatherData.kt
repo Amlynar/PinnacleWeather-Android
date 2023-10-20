@@ -3,6 +3,7 @@ package com.example.pinnacleweather.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// Create the Room database schema for the local relational database
 @Entity (tableName = "weatherData")
 data class LocalWeatherData (
     @PrimaryKey val id: String,

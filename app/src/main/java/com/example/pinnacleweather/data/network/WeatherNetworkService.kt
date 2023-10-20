@@ -17,6 +17,6 @@ class WeatherNetworkService @Inject constructor(
     }
 
     fun iconUrl(icon: String): String {
-        return "https://openweathermap.org/img/wn/$icon@2x.png"
+        return "https://openweathermap.org/img/wn/$icon@2x.png" // Should move hardcoded strings into a const file
     }
 }
