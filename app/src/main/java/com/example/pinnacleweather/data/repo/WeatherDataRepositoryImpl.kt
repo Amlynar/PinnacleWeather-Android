@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.pinnacleweather.data.local.LocalWeatherData
 import com.example.pinnacleweather.data.local.WeatherDataDao
 import com.example.pinnacleweather.data.network.OpenWeatherDataResponse
-import com.example.pinnacleweather.data.network.Weather
 import com.example.pinnacleweather.data.network.WeatherNetworkService
 import com.example.pinnacleweather.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -49,33 +48,30 @@ class WeatherDataRepositoryImpl @Inject constructor(
         weatherNetworkService.getGeoLocation(cityName).let {openWeatherGeocodingResponse ->
             if (!openWeatherGeocodingResponse.isSuccessful) {
                 Log.e(TAG,openWeatherGeocodingResponse.errorBody().toString())
-                // TODO implement error handling
-                return
+                throw Exception(openWeatherGeocodingResponse.errorBody().toString())
             }
 
             val geolocation = openWeatherGeocodingResponse.body()?.first()
             if (geolocation == null) {
                 Log.e(TAG,"geolocation == null")
-                // TODO implement error handling
-                return
+                throw Exception("geolocation == null")
             }
 
             fetchWeatherByLatLonAndPersist(cityName = cityName, lat = geolocation.lat, lon = geolocation.lon)
         }
     }
+
     private suspend fun fetchWeatherByLatLonAndPersist(cityName: String, lat: Double, lon: Double) {
         weatherNetworkService.getWeather(lat = lat, lon = lon).let { openWeatherDataResponse ->
             if(!openWeatherDataResponse.isSuccessful) {
                 Log.e(TAG,openWeatherDataResponse.errorBody().toString())
-                // TODO implement error handling
-                return
+                throw Exception(openWeatherDataResponse.errorBody().toString())
             }
 
             val weatherNetworkData = openWeatherDataResponse.body()
             if (weatherNetworkData == null) {
                 Log.e(TAG, "weatherNetworkData == null")
-                // TODO implement error handling
-                return
+                throw Exception("weatherNetworkData == null")
             }
             val lastUpdated = System.currentTimeMillis()
             localWeatherDataDao.deleteAll()
