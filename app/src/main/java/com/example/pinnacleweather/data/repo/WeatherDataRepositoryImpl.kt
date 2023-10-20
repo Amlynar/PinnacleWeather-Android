@@ -65,7 +65,7 @@ class WeatherDataRepositoryImpl @Inject constructor(
                     return
                 }
 
-                val weatherNetworkData = openWeatherDataResponse.body()?.weather?.first()
+                val weatherNetworkData = openWeatherDataResponse.body()
                 if (weatherNetworkData == null) {
                     Log.e(TAG, "weatherNetworkData == null")
                     // TODO implement error handling
@@ -73,19 +73,19 @@ class WeatherDataRepositoryImpl @Inject constructor(
                 }
 
                 localWeatherDataDao.deleteAll()
-                val localWeatherData = toLocalWeatherData(weatherNetworkData)
+                val localWeatherData = toLocalWeatherData(cityName,weatherNetworkData)
                 localWeatherDataDao.upsert(localWeatherData)
             }
         }
     }
 
     override suspend fun addRandom() {
-        localWeatherDataDao.deleteAll()
-        localWeatherDataDao.upsert(
-            LocalWeatherData(
-                UUID.randomUUID().toString(),
-                "city")
-        )
+//        localWeatherDataDao.deleteAll()
+//        localWeatherDataDao.upsert(
+//            LocalWeatherData(
+//                UUID.randomUUID().toString(),
+//                "city")
+//        )
 //        for (localWeatherData in localWeatherDataDao.getAll()) {
 //            Log.d("test",localWeatherData.toString())
 //        }
@@ -101,38 +101,48 @@ class WeatherDataRepositoryImpl @Inject constructor(
 //            }
 //        }
 
-        weatherNetworkService.getGeoLocation("New York").let {
-            if (it.isSuccessful) {
-                val response = it.body()
-                val geolocation = response?.firstOrNull()
-                Log.d("test", response?.firstOrNull().toString())
-                geolocation?.let { it1 ->
-                    weatherNetworkService.getWeather(lat = it1.lat, lon = it1.lon).let { it2 ->
-                        if (it2.isSuccessful) {
-                            val response2 = it2.body()
-                            Log.d("Test",response2?.weather?.firstOrNull().toString())
-                        } else {
-                            Log.e("test",it2.errorBody().toString())
-                        }
-                    }
-                }
-
-            }
-            else {
-                Log.e("test",it.errorBody().toString())
-            }
-        }
-
-        Log.d("test","finished")
+//        weatherNetworkService.getGeoLocation("New York").let {
+//            if (it.isSuccessful) {
+//                val response = it.body()
+//                val geolocation = response?.firstOrNull()
+//                Log.d("test", response?.firstOrNull().toString())
+//                geolocation?.let { it1 ->
+//                    weatherNetworkService.getWeather(lat = it1.lat, lon = it1.lon).let { it2 ->
+//                        if (it2.isSuccessful) {
+//                            val response2 = it2.body()
+//                            Log.d("Test",response2?.weather?.firstOrNull().toString())
+//                        } else {
+//                            Log.e("test",it2.errorBody().toString())
+//                        }
+//                    }
+//                }
+//
+//            }
+//            else {
+//                Log.e("test",it.errorBody().toString())
+//            }
+//        }
+//
+//        Log.d("test","finished")
     }
 
     private fun toWeatherData(localWeatherData: LocalWeatherData): WeatherData = WeatherData(
         id = localWeatherData.id,
-        city = localWeatherData.city)
+        city = localWeatherData.city,
+        temperature = localWeatherData.temperature,
+        weatherIcon = localWeatherData.weatherIcon,
+        weatherMain = localWeatherData.weatherMain,
+        weatherDescription = localWeatherData.weatherDescription)
 
-    private fun toLocalWeatherData(weatherNetworkData: Weather): LocalWeatherData = LocalWeatherData(
-        id = "",
-        city = ""
+    private fun toLocalWeatherData(cityName: String, openWeatherDataResponse: OpenWeatherDataResponse): LocalWeatherData = LocalWeatherData(
+        id = UUID.randomUUID().toString(),
+        city = cityName,
+        lat = openWeatherDataResponse.lat,
+        lon = openWeatherDataResponse.lon,
+        temperature = openWeatherDataResponse.main!!.temp,
+        weatherIcon = openWeatherDataResponse.weather!!.first().icon,
+        weatherMain = openWeatherDataResponse.weather.first().main,
+        weatherDescription = openWeatherDataResponse.weather.first().description
     )
 
 }

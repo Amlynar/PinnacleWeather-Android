@@ -7,4 +7,11 @@ import androidx.room.PrimaryKey
 data class LocalWeatherData (
     @PrimaryKey val id: String,
     var city: String,
+    val lat: Double = 0.0,
+    val lon: Double = 0.0,
+    var temperature: Double,
+    var weatherIcon: String,
+    var weatherMain: String,
+    var weatherDescription: String
+    // TODO Add lastUpdated Timestamp
 )

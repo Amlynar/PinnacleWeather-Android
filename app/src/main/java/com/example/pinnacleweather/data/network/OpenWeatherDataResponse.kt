@@ -1,7 +1,14 @@
 package com.example.pinnacleweather.data.network
 
 data class OpenWeatherDataResponse (
+    val lat: Double = 0.0,
+    val lon: Double = 0.0,
+    val main: Main?=null,
     val weather: List<Weather>?=null
+)
+
+data class Main (
+    val temp: Double = 0.0
 )
 
 data class Weather(

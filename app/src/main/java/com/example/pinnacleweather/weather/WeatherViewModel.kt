@@ -75,7 +75,7 @@ class WeatherViewModel @Inject constructor(
                 WeatherUiState(message = "error")
             }
             is Async.Success -> {
-                WeatherUiState(message = weatherDataLoad.data.id)
+                WeatherUiState(message = "${weatherDataLoad.data.city} ${weatherDataLoad.data.weatherMain} ${weatherDataLoad.data.temperature}")
             }
         }
 }
