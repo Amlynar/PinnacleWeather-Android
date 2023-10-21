@@ -135,7 +135,8 @@ class WeatherDataRepositoryTest {
         catch (e: Exception) {
             errorMessage = e.message.toString()
         }
-        assert(errorMessage != "") // This is a bit of a hack and should be refactored to catch the specific error not any Exception
+        assert(errorMessage != "") // This is a bit of a hack and should be refactored to catch the specific error
+                                    //  not any Exception
     }
 
     private suspend fun mockOneEntryInLocalWeatherDataDatabase(id: String, city: String, lat: Double, lon: Double, temperature: Double, weatherIcon: String, weatherMain: String, weatherDescription: String, lastUpdated: Long) {

@@ -48,13 +48,13 @@ class WeatherDataRepositoryImpl @Inject constructor(
         weatherNetworkService.getGeoLocation(cityName).let {openWeatherGeocodingResponse ->
             if (!openWeatherGeocodingResponse.isSuccessful) {
                 Log.e(TAG,openWeatherGeocodingResponse.errorBody().toString())
-                throw Exception(openWeatherGeocodingResponse.errorBody().toString())
+                throw Exception(openWeatherGeocodingResponse.errorBody().toString()) // Should extend the Exception class and throw a custom error to be explicitly caught later
             }
 
             val geolocation = openWeatherGeocodingResponse.body()?.first()
             if (geolocation == null) {
                 Log.e(TAG,"geolocation == null")
-                throw Exception("geolocation == null")
+                throw Exception("geolocation == null") // Should extend the Exception class and throw a custom error to be explicitly caught later
             }
 
             fetchWeatherByLatLonAndPersist(cityName = cityName, lat = geolocation.lat, lon = geolocation.lon)
@@ -67,13 +67,13 @@ class WeatherDataRepositoryImpl @Inject constructor(
         weatherNetworkService.getWeather(lat = lat, lon = lon).let { openWeatherDataResponse ->
             if(!openWeatherDataResponse.isSuccessful) {
                 Log.e(TAG,openWeatherDataResponse.errorBody().toString())
-                throw Exception(openWeatherDataResponse.errorBody().toString())
+                throw Exception(openWeatherDataResponse.errorBody().toString()) // Should extend the Exception class and throw a custom error to be explicitly caught later
             }
 
             val weatherNetworkData = openWeatherDataResponse.body()
             if (weatherNetworkData == null) {
                 Log.e(TAG, "weatherNetworkData == null")
-                throw Exception("weatherNetworkData == null")
+                throw Exception("weatherNetworkData == null") // Should extend the Exception class and throw a custom error to be explicitly caught later
             }
             val lastUpdated = System.currentTimeMillis()
             localWeatherDataDao.deleteAll()
