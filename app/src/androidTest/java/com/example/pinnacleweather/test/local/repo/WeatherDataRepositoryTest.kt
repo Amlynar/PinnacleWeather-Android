@@ -20,19 +20,8 @@ import org.junit.Test
 import retrofit2.Response
 import java.util.UUID
 
+// Ideally we should have 100% code coverage on all public functions
 class WeatherDataRepositoryTest {
-
-    private val localWeatherData = LocalWeatherData(
-        id = UUID.randomUUID().toString(),
-        city = "New York",
-        lat = 70.3,
-        lon = 40.7,
-        temperature = 60.1,
-        weatherIcon = "",
-        weatherMain = "Rain",
-        weatherDescription = "Mostly Cloudy",
-        lastUpdated = 0
-    )
 
     private lateinit var mockLocalWeatherDao: MockWeatherDataDao
     private lateinit var mockOpenWeatherMapAPI: MockOpenWeatherMapAPI
